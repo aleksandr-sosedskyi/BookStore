@@ -11,6 +11,7 @@ services:
       - POSTGRES_DB=$POSTGRES_DB
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      
   server:
     build: ./server/
     working_dir: /var/www/server
