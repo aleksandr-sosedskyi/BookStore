@@ -19,3 +19,6 @@ shell:
 
 build:
 	@docker-compose build
+
+test:
+	@docker-compose run --rm server python manage.py test
