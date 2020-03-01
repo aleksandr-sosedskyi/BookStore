@@ -1,13 +1,17 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
+
+from accounts.permissions import IPBLackListPermission
 from accounts.serializers import SignUpSerializer
 
 
 @api_view(['POST',])
+@permission_classes([IPBLackListPermission,])
 def signup(request):
-    """ View for processing signing up """
+    """ View for processing Registration """
+    
     serializer = SignUpSerializer(data=request.data)
     data = {}
     if serializer.is_valid():
