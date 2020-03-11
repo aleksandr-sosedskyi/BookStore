@@ -47,3 +47,16 @@ class AuthTestCase(APITestCase):
         models.IPBlackList.objects.create(ip_addr='127.0.0.1')
         response = self.client.post(reverse('accounts:signup'), data, REMOTE_ADDR="127.0.0.1")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_rate_requests(self):
+        user = self.User(email=self.email)
+        user.set_password(self.password)
+        user.save()
+        data = {
+            'username': self.email,
+            'password': 'wrong_password'
+        }
+        for _ in range(3):
+            self.client.post(reverse('accounts:login'), data)
+        response = self.client.post(reverse('accounts:login'), data)
+        self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
