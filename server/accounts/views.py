@@ -13,14 +13,12 @@ def signup(request):
     
     serializer = SignUpSerializer(data=request.data)
     data = {}
-    print(1111111)
     if serializer.is_valid():
         user = serializer.save()
         data['response'] = "Successfully registered a new user!"
         data['email'] = user.email
         token = Token.objects.get(user=user).key
         data['token'] = token
-
     else:
         data = serializer.errors
     return Response(data)
