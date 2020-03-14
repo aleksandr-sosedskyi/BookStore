@@ -50,14 +50,6 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-
-    
-
-@receiver(post_save, sender=get_user_model())
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    """ Create Token after user signed up """
-    if created:
-        Token.objects.create(user=instance)
         
 
 class IPBlackList(models.Model):
@@ -72,3 +64,10 @@ class IPBlackList(models.Model):
     class Meta:
         verbose_name = 'Blocked IP address'
         verbose_name_plural = 'Blocked IP adresses'
+
+
+@receiver(post_save, sender=get_user_model())
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    """ Create Token after user signed up """
+    if created:
+        Token.objects.create(user=instance)

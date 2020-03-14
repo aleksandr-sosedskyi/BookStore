@@ -44,11 +44,11 @@ INSTALLED_APPS = [
 
     # Third-part apps
     'axes',
+    'django_rest_passwordreset',
 
     # My apps
     'accounts'
 ]
-
 
 AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesBackend',
@@ -155,3 +155,6 @@ STATIC_URL = '/static/'
 # AXES Configuration
 AXES_FAILURE_LIMIT = 3
 AXES_COOLOFF_TIME = datetime.timedelta(seconds=30)
+
+# Password reset configuration
+DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 2

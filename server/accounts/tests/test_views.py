@@ -1,8 +1,7 @@
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APITestCase
 
 from accounts import models
 from accounts.serializers import SignUpSerializer
@@ -27,9 +26,7 @@ class AuthTestCase(APITestCase):
 
     def test_login_success(self):
         """ Test successfull Login """
-        user = self.User(email=self.email)
-        user.set_password(self.password)
-        user.save()
+        user = self.User.objects.create_user(email=self.email, password=self.password)
         data = {
             "username": self.email,
             "password": self.password
@@ -49,9 +46,7 @@ class AuthTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_rate_requests(self):
-        user = self.User(email=self.email)
-        user.set_password(self.password)
-        user.save()
+        user = self.User.objects.create_user(email=self.email, password=self.password)
         data = {
             'username': self.email,
             'password': 'wrong_password'
@@ -59,4 +54,4 @@ class AuthTestCase(APITestCase):
         for _ in range(3):
             self.client.post(reverse('accounts:login'), data)
         response = self.client.post(reverse('accounts:login'), data)
-        self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
