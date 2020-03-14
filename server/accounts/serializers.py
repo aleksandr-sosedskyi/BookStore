@@ -1,5 +1,9 @@
 from rest_framework import serializers
-from .models import User
+
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+
+from accounts.models import Profile
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -9,11 +13,11 @@ class SignUpSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ["email", "password1", "password2"]
 
     def save(self):
-        user = User(
+        user = get_user_model()(
             email=self.validated_data['email'],
         )
 
@@ -26,3 +30,23 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
+class ProfileSerializer(serializers.ModelSerializer):
+    """ User profile serializer """
+    email = serializers.EmailField(source='user.email', required=False)
+    
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.updated_at = timezone.now()
+        if 'user' in validated_data:
+            user = instance.user
+            user.email = validated_data.get('user')['email']
+            user.save()
+        return instance
+        

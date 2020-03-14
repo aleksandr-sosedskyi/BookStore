@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
 
 from accounts import models
 from accounts.serializers import SignUpSerializer
@@ -55,3 +57,61 @@ class AuthTestCase(APITestCase):
             self.client.post(reverse('accounts:login'), data)
         response = self.client.post(reverse('accounts:login'), data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileTest(APITestCase):
+    """ Test Profile CRUD """
+    User = get_user_model()
+
+    def setUp(self):
+        """ Initial settings """
+        self.user = self.User.objects.create_user(email='example@example.com', password='example11200')
+        self.token = Token.objects.get(user=self.user).key
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+    
+    def create_profile(self):
+        """ Create a profile """
+        data = {
+            'first_name': 'Test',
+            'last_name': 'Test',
+            'phone': '380661204500',
+            'user': self.user.pk,
+        }
+        authorization = 'Token ' + self.token
+        response = self.client.post(reverse('accounts:profiles-list'), data=data)
+        return response
+
+    def test_create_profile(self):
+        """ Test creating profile """
+        response = self.create_profile()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['user'], self.user.pk)
+
+    def test_get_profiles(self):
+        """ Test getting profile queryset """
+        self.create_profile()
+        response = self.client.get(reverse('accounts:profiles-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)        
+        self.assertTrue(response.data)
+    
+    def test_update_profile(self):
+        """ Test updating profile """
+        profile = self.create_profile().data
+        url = reverse('accounts:profiles-detail', kwargs={'pk': profile['id']})
+        response = self.client.patch(url, data={'first_name': 'New name'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(profile['first_name'], response.data['first_name'])
+    
+    def test_delete_profile(self):
+        """ Test deleting profile """
+        profile = self.create_profile().data
+        url = reverse('accounts:profiles-detail', kwargs={'pk': profile['id']})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_retrieve_profile(self):
+        """ Test retrieving detail profile """
+        profile = self.create_profile().data
+        url = reverse('accounts:profiles-detail', kwargs={'pk': profile['id']})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

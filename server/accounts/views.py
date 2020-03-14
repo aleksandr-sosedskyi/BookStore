@@ -2,10 +2,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.authtoken.models import Token
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from accounts.permissions import IPBLackListPermission
-from accounts.serializers import SignUpSerializer
-
+from accounts.serializers import SignUpSerializer, ProfileSerializer
+from accounts.models import Profile
 
 @api_view(['POST',])
 def signup(request):
@@ -22,3 +24,10 @@ def signup(request):
     else:
         data = serializer.errors
     return Response(data)
+
+
+class ProfileViewSet(ModelViewSet):
+    """ Profile viewset """
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly,]

@@ -71,3 +71,24 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     """ Create Token after user signed up """
     if created:
         Token.objects.create(user=instance)
+
+
+class Profile(models.Model):
+    """ User Profile Model """
+    user = models.ForeignKey(get_user_model(), related_name='profile', on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.get_full_name()
+
+    def get_full_name(self):
+        """ Return user first and last names """
+        return f'{self.first_name} {self.last_name}'
+
+    class Meta:
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
