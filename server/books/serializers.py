@@ -15,3 +15,11 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Genre
         fields = '__all__'
+
+
+class BookSerializer(serializers.ModelSerializer):
+    """ Serializer for Book model """
+    class Meta:
+        model = models.Book
+        fields = '__all__'
+    
