@@ -43,7 +43,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.phone = validated_data.get('phone', instance.phone)
-        instance.updated_at = timezone.now()
         if 'user' in validated_data:
             user = instance.user
             user.email = validated_data.get('user')['email']

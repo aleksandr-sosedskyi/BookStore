@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
 
     # My apps
-    'accounts'
+    'accounts',
+    'books',
 ]
 
 AUTHENTICATION_BACKENDS = [

@@ -68,24 +68,25 @@ class ProfileTest(APITestCase):
         self.user = self.User.objects.create_user(email='example@example.com', password='example11200')
         self.token = Token.objects.get(user=self.user).key
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
-    
-    def create_profile(self):
-        """ Create a profile """
-        data = {
+        self.test_data = {
             'first_name': 'Test',
             'last_name': 'Test',
             'phone': '380661204500',
-            'user': self.user.pk,
+            'user': self.user,
         }
-        authorization = 'Token ' + self.token
-        response = self.client.post(reverse('accounts:profiles-list'), data=data)
-        return response
+        
+    def create_profile(self):
+        """ Create a profile """
+
+        profile = models.Profile.objects.create(**self.test_data)
+        return profile
 
     def test_create_profile(self):
         """ Test creating profile """
-        response = self.create_profile()
+        data = self.test_data.copy()
+        data['user'] = self.test_data['user'].pk
+        response = self.client.post(reverse('accounts:profiles-list'), data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['user'], self.user.pk)
 
     def test_get_profiles(self):
         """ Test getting profile queryset """
@@ -96,22 +97,23 @@ class ProfileTest(APITestCase):
     
     def test_update_profile(self):
         """ Test updating profile """
-        profile = self.create_profile().data
-        url = reverse('accounts:profiles-detail', kwargs={'pk': profile['id']})
+        profile = self.create_profile()
+        url = reverse('accounts:profiles-detail', kwargs={'pk': profile.pk})
         response = self.client.patch(url, data={'first_name': 'New name'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertNotEqual(profile['first_name'], response.data['first_name'])
+        self.assertNotEqual(profile.first_name, response.data['first_name'])
     
     def test_delete_profile(self):
         """ Test deleting profile """
-        profile = self.create_profile().data
-        url = reverse('accounts:profiles-detail', kwargs={'pk': profile['id']})
+        profile = self.create_profile()
+        url = reverse('accounts:profiles-detail', kwargs={'pk': profile.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_retrieve_profile(self):
         """ Test retrieving detail profile """
-        profile = self.create_profile().data
-        url = reverse('accounts:profiles-detail', kwargs={'pk': profile['id']})
+        profile = self.create_profile()
+        url = reverse('accounts:profiles-detail', kwargs={'pk': profile.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+    

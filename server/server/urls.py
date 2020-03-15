@@ -21,4 +21,5 @@ urlpatterns = [
     re_path(r'^api-auth/', include('rest_framework.urls')),
     re_path(r'^api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('api/accounts/', include('accounts.urls')),
+    path('api/books/', include('books.urls')),
 ]
