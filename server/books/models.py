@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 
+from accounts.models import Profile
+
 
 class AgeCategory(models.Model):
     """ Book age category """
@@ -69,4 +71,23 @@ class Book(models.Model):
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
     
-    
+
+class BookLikeDislike(models.Model):
+    """ Keep book likes and dislikes """
+    book = models.ForeignKey(
+        Book, 
+        related_name='likes_dislikes', 
+        on_delete=models.CASCADE
+    )
+    profile = models.ForeignKey(
+        Profile,
+        related_name='likes_dislikes',
+        on_delete=models.CASCADE
+    )
+    TYPE_CHOICES = (
+        ('like', 'Like'),
+        ('dislike', 'Dislike')
+    )
+    like_type = models.CharField(max_length=7, choices=TYPE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

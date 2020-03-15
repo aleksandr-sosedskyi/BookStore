@@ -2,6 +2,8 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
+from accounts.models import Profile
+
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
@@ -11,6 +13,29 @@ import decimal
 
 
 User = get_user_model()
+
+# Test data for Book model
+book_data = {
+    'age_category': 'TO_OVERRIDE',
+    'genre': 'TO_OVERRIDE',
+    'author': 'Author',
+    'title': 'Title',
+    'year': 2000,
+    'buy_link': 'https://example.com',
+    'pages': 100,
+    'description': 'Test description',
+    'in_stock': 1,
+    'price': decimal.Decimal(10.50)
+}
+
+# Test data for profile
+profile_data = {
+    'first_name': 'Name',
+    'last_name': 'Name',
+    'phone': '380661204500',
+    'user': 'TOOVERRIDE',
+}
+
 
 class AgeCategoryTestCase(APITestCase):
     def setUp(self):
@@ -127,20 +152,13 @@ class BookTestCase(APITestCase):
             name='Test name'
         )
         self.genre = models.Genre.objects.create(
-            name = 'Test name'
+            name='Test name'
         )
-        self.test_data = {
+        self.test_data = book_data.copy()
+        self.test_data.update({
             'age_category': self.category,
-            'genre': self.genre,
-            'author': 'Author',
-            'title': 'Title',
-            'year': 2000,
-            'buy_link': 'https://example.com',
-            'pages': 100,
-            'description': 'Test description',
-            'in_stock': 1,
-            'price': decimal.Decimal(10.50)
-        }
+            'genre': self.genre
+        })
     
     def create_book(self):
         """ Create book """
@@ -151,6 +169,10 @@ class BookTestCase(APITestCase):
         """ Test creating book """
         url = reverse('books:books-list')
         data = self.test_data.copy()
+        data.update({
+            'age_category': self.test_data['age_category'].pk,
+            'genre': self.test_data['genre'].pk
+        })
         data['age_category'] = self.test_data['age_category'].pk
         data['genre'] = self.test_data['genre'].pk
         response = self.client.post(url, data)
@@ -187,3 +209,77 @@ class BookTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data)
         
+
+class BookLikeDislikeTestCase(APITestCase):
+    """ Test book liking and disliking """
+
+    def setUp(self):
+        """ Initial settings (create user, profile, token category, genre, book) """
+        self.user = User.objects.create_user(email='example@example.com', password='example11200')
+        self.test_profile_data = profile_data.copy()
+        self.test_profile_data.update({
+            'user': self.user
+        })
+        self.profile = Profile.objects.create(**self.test_profile_data)
+        self.token = Token.objects.first().key
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        self.category = models.AgeCategory.objects.create(name='name')
+        self.genre = models.Genre.objects.create(name='name')
+        self.test_book_data = book_data.copy()
+        self.test_book_data.update({
+            'age_category': self.category,
+            'genre': self.genre
+        })
+        self.book = models.Book.objects.create(**self.test_book_data)
+        self.test_like_data = {
+            'profile': self.profile,
+            'book': self.book,
+            'like_type': 'like',
+        }
+
+    def create_like(self):
+        """ Create BookLikeDislike object """
+        like = models.BookLikeDislike.objects.create(**self.test_like_data)
+        return like
+    
+    def test_create_like(self):
+        """ Test creating book like """
+        data = self.test_like_data.copy()
+        data.update({
+            'profile': self.test_like_data['profile'].pk,
+            'book': self.test_like_data['book'].pk
+        })
+        response = self.client.post(reverse('books:likes-dislikes-list'), data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.data)
+    
+    def test_get_likes(self):
+        """ Test retrieving all likes/dislikes """
+        self.create_like()
+        response = self.client.get(reverse('books:likes-dislikes-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data)
+    
+    def test_get_like(self):
+        """ Test retrieving a like/dislike """
+        like = self.create_like()
+        url = reverse('books:likes-dislikes-detail', kwargs={'pk': like.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data)
+    
+    def test_update_like(self):
+        """ Test updating a like/dislike """
+        like = self.create_like()
+        url = reverse('books:likes-dislikes-detail', kwargs={'pk': like.pk})
+        response = self.client.patch(url, {'like_type': 'dislike'})
+        like.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(like.like_type, 'dislike')
+    
+    def test_delete_like(self):
+        """ Test deleting a like/dislike """
+        like = self.create_like()
+        url = reverse('books:likes-dislikes-detail', kwargs={'pk': like.pk})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

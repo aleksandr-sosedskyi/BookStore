@@ -23,3 +23,10 @@ class BookSerializer(serializers.ModelSerializer):
         model = models.Book
         fields = '__all__'
     
+
+class BookLikeDislike(serializers.ModelSerializer):
+    """ Serializer for book likes and dislikes """
+    class Meta: 
+        model = models.BookLikeDislike
+        fields = '__all__'
+        

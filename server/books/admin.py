@@ -5,3 +5,5 @@ from books import models
 
 admin.site.register(models.AgeCategory)
 admin.site.register(models.Genre)
+admin.site.register(models.Book)
+admin.site.register(models.BookLikeDislike)

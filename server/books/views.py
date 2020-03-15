@@ -26,4 +26,11 @@ class BookViewSet(ModelViewSet):
     queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, ]
+
+
+class BookLikeDislikeViewSet(ModelViewSet):
+    """ ViewSet for Book likes and dislikes """
+    queryset = models.BookLikeDislike.objects.all()
+    serializer_class = serializers.BookLikeDislike
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
     
