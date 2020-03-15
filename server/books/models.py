@@ -91,3 +91,35 @@ class BookLikeDislike(models.Model):
     like_type = models.CharField(max_length=7, choices=TYPE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.book.title + " - " + self.profile.first_name
+
+    class Meta:
+        verbose_name = 'Book Like/Dislike'
+        verbose_name = 'Book Likes/Dislikes/'
+
+
+class Comment(models.Model):
+    """ Model to keep comments to book """
+    profile = models.ForeignKey(
+        Profile,
+        related_name='comments',
+        on_delete=models.CASCADE
+    )
+    book = models.ForeignKey(
+        Book,
+        related_name='comments',
+        on_delete=models.CASCADE
+    )
+    text = models.TextField(validators=[MinLengthValidator(5),])
+    mark = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.book.title + " " + self.mark
+    
+    class Meta:
+        verbose_name = 'Book comment'
+        verbose_name_plural = 'Book comments'

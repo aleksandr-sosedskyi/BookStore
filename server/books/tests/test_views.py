@@ -283,3 +283,79 @@ class BookLikeDislikeTestCase(APITestCase):
         url = reverse('books:likes-dislikes-detail', kwargs={'pk': like.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class CommentTestCase(APITestCase):
+    """ Test Comment Endpoint """
+
+    def setUp(self):
+        """ Initial settings (create user, profile, token category, genre, book) """
+        self.user = User.objects.create_user(email='example@example.com', password='example11200')
+        self.test_profile_data = profile_data.copy()
+        self.test_profile_data.update({
+            'user': self.user
+        })
+        self.profile = Profile.objects.create(**self.test_profile_data)
+        self.token = Token.objects.first().key
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        self.category = models.AgeCategory.objects.create(name='name')
+        self.genre = models.Genre.objects.create(name='name')
+        self.test_book_data = book_data.copy()
+        self.test_book_data.update({
+            'age_category': self.category,
+            'genre': self.genre
+        })
+        self.book = models.Book.objects.create(**self.test_book_data)
+        self.test_comment_data = {
+            'profile': self.profile,
+            'book': self.book,
+            'text': 'Test text',
+            'mark': 4
+        }
+    
+    def create_comment(self):
+        """ Create comment object """
+        comment = models.Comment.objects.create(**self.test_comment_data)
+        return comment
+    
+    def test_create_comment(self):
+        """ Test create comment endpoint """
+        data = self.test_comment_data.copy()
+        data.update({
+            'profile': self.test_comment_data['profile'].pk,
+            'book': self.test_comment_data['book'].pk
+        })
+        response = self.client.post(reverse('books:comments-list'), data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.data)
+    
+    def test_get_comments(self):
+        """ Test get comments endpoint """
+        self.create_comment()
+        response = self.client.get(reverse('books:comments-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data)
+    
+    def test_get_comment(self):
+        """ Test get detail comment endpoint """
+        comment = self.create_comment()
+        url = reverse('books:comments-detail', kwargs={'pk': comment.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data)
+    
+    def test_update_comment(self):
+        """ Test update comment endpoint """
+        comment = self.create_comment()
+        url = reverse('books:comments-detail', kwargs={'pk': comment.pk})
+        response = self.client.patch(url, {'text': 'New text'})
+        comment.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data)
+    
+    def test_delete_comment(self):
+        """ Test delete comment endpoint """
+        comment = self.create_comment()
+        url = reverse('books:comments-detail', kwargs={'pk': comment.pk})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
