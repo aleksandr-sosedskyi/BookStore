@@ -6,14 +6,13 @@ from django.contrib.auth import get_user_model
 
 from django_rest_passwordreset.models import ResetPasswordToken
 
+from accounts.factories import UserFactory
 
 class PasswordResetTestCase(APITestCase):
     User = get_user_model()
-    email = "example@example.com"
-    password = "example11200"
 
     def setUp(self):
-        self.User.objects.create_user(email=self.email, password=self.password)
+        self.user = UserFactory()
 
     def send_reset_password_request(self, data):
         """ Send request to reset password """
@@ -23,7 +22,7 @@ class PasswordResetTestCase(APITestCase):
     def test_successful_generate_token(self):
         """ Test successful generating token for provided email """
         data = {
-            'email': self.email
+            'email': self.user.email
         }
         response = self.send_reset_password_request(data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -39,7 +38,7 @@ class PasswordResetTestCase(APITestCase):
     def test_successful_validate_token(self):
         """ Test successful validating token """
         data = {
-            'email': self.email
+            'email': self.user.email
         }
         self.send_reset_password_request(data)
         token = ResetPasswordToken.objects.first().key
@@ -55,15 +54,15 @@ class PasswordResetTestCase(APITestCase):
 
     def test_successful_change_password(self):
         """ Test successful changing password with provided token and password """
-        self.send_reset_password_request( {'email': self.email} )
+        self.send_reset_password_request( {'email': self.user.email} )
         token = ResetPasswordToken.objects.first().key
         data = {
             'token': token,
             'password': 'exampleNewPassword'
         }
         response = self.client.post(reverse('password_reset:reset-password-confirm'), data=data)
-        user = self.User.objects.get(email=self.email)
-        self.assertTrue(user.check_password('exampleNewPassword'))
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('exampleNewPassword'))
 
     def test_fail_change_password(self):
         """ Test fail changing password with provided wrong token """
@@ -72,5 +71,4 @@ class PasswordResetTestCase(APITestCase):
             'password': 'exampleNewPassword'
         }
         self.client.post(reverse('password_reset:reset-password-confirm'), data=data)
-        user = self.User.objects.get(email=self.email)
-        self.assertFalse(user.check_password('exampleNewPassword'))
+        self.assertFalse(self.user.check_password('exampleNewPassword'))

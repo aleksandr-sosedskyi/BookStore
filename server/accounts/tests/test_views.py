@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 
 from accounts import models
 from accounts.serializers import SignUpSerializer
+from accounts.factories import UserFactory, ProfileFactory
 
 import json
 
@@ -48,9 +49,9 @@ class AuthTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_rate_requests(self):
-        user = self.User.objects.create_user(email=self.email, password=self.password)
+        user = UserFactory()
         data = {
-            'username': self.email,
+            'username': user.email,
             'password': 'wrong_password'
         }
         for _ in range(3):
@@ -65,7 +66,7 @@ class ProfileTest(APITestCase):
 
     def setUp(self):
         """ Initial settings """
-        self.user = self.User.objects.create_user(email='example@example.com', password='example11200')
+        self.user = UserFactory.create()
         self.token = Token.objects.get(user=self.user).key
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         self.test_data = {
@@ -74,12 +75,6 @@ class ProfileTest(APITestCase):
             'phone': '380661204500',
             'user': self.user,
         }
-        
-    def create_profile(self):
-        """ Create a profile """
-
-        profile = models.Profile.objects.create(**self.test_data)
-        return profile
 
     def test_create_profile(self):
         """ Test creating profile """
@@ -90,14 +85,14 @@ class ProfileTest(APITestCase):
 
     def test_get_profiles(self):
         """ Test getting profile queryset """
-        self.create_profile()
+        ProfileFactory()
         response = self.client.get(reverse('accounts:profiles-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)        
         self.assertTrue(response.data)
     
     def test_update_profile(self):
         """ Test updating profile """
-        profile = self.create_profile()
+        profile = ProfileFactory()
         url = reverse('accounts:profiles-detail', kwargs={'pk': profile.pk})
         response = self.client.patch(url, data={'first_name': 'New name'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -105,14 +100,14 @@ class ProfileTest(APITestCase):
     
     def test_delete_profile(self):
         """ Test deleting profile """
-        profile = self.create_profile()
+        profile = ProfileFactory()
         url = reverse('accounts:profiles-detail', kwargs={'pk': profile.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_retrieve_profile(self):
         """ Test retrieving detail profile """
-        profile = self.create_profile()
+        profile = ProfileFactory()
         url = reverse('accounts:profiles-detail', kwargs={'pk': profile.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

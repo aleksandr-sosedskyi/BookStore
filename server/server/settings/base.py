@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # My apps
     'accounts',
     'books',
+    'orders'
 ]
 
 AUTHENTICATION_BACKENDS = [

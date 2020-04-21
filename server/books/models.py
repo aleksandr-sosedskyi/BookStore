@@ -55,7 +55,7 @@ class Book(models.Model):
     views = models.PositiveIntegerField(default=0)
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)
-    buy_link = models.URLField()
+    product_code = models.CharField(max_length=100)
     author = models.CharField(max_length=255, validators=[MinLengthValidator(3),])
     pages = models.PositiveIntegerField(validators=[MinValueValidator(1),])
     description = models.TextField(validators=[MinLengthValidator(10), ])
@@ -113,7 +113,9 @@ class Comment(models.Model):
         on_delete=models.CASCADE
     )
     text = models.TextField(validators=[MinLengthValidator(5),])
-    mark = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    mark = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
