@@ -22,7 +22,7 @@ class Order(models.Model):
         on_delete=models.SET_NULL,
         null = True
     )
-    book = models.ManyToManyField(Book, related_name='orders')
+    book = models.ManyToManyField(Book, related_name='orders', through='orders.OrderBook')
     address = models.CharField(max_length=255)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     total_price = models.DecimalField(max_digits=7, decimal_places=2)
@@ -36,3 +36,22 @@ class Order(models.Model):
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 
+
+class OrderBook(models.Model):
+    """ Intermediate model to keep info about amount of books in orders """
+    book = models.ForeignKey(
+        Book, 
+        on_delete=models.SET_NULL, 
+        related_name='order_book',
+        null=True
+    )
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_book')
+    amount = models.PositiveSmallIntegerField()
+    
+
+    def __str__(self):
+        return f"{self.pk} {self.book.title}"
+
+    class Meta:
+        verbose_name = 'Book in order'
+        verbose_name_plural = 'Books in orders'
