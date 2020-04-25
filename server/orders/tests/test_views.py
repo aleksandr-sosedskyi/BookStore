@@ -27,17 +27,16 @@ class OrderTestCase(APITestCase):
         self.book = book_factories.BookFactory()
         self.test_order_data = {
             'profile': self.profile.pk,
-            'book': [self.book.pk,],
+            'order_book': [{'book': self.book.pk, 'amount': 1},],
             'address': 'Address',
-            'status': 'paid',
-            'total_price': 2000
         }
 
     def test_create_order(self):
         """ Test creating order """
         response = self.client.post(
             reverse('orders:orders-list'), 
-            data=self.test_order_data
+            data=self.test_order_data,
+            format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(response.data)

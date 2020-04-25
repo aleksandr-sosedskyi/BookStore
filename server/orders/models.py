@@ -11,6 +11,7 @@ import decimal
 class Order(models.Model):
     """ Model for keeping order details """
     STATUS_CHOICES = (
+        ('registered', 'Registered'),
         ('paid', 'Paid'),
         ('sent', 'Sent'),
         ('delivered', 'Delivered')
@@ -22,9 +23,9 @@ class Order(models.Model):
         on_delete=models.SET_NULL,
         null = True
     )
-    book = models.ManyToManyField(Book, related_name='orders', through='orders.OrderBook')
+    book = models.ManyToManyField(Book, related_name='order_book', through='orders.OrderBook')
     address = models.CharField(max_length=255)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='registered')
     total_price = models.DecimalField(max_digits=7, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -41,8 +42,8 @@ class OrderBook(models.Model):
     """ Intermediate model to keep info about amount of books in orders """
     book = models.ForeignKey(
         Book, 
+        related_name='order_book_book',
         on_delete=models.SET_NULL, 
-        related_name='order_book',
         null=True
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_book')
