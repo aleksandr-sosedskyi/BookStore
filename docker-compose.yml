@@ -22,5 +22,18 @@ services:
       - ./server/:/var/www/server
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
-    depends_on:
+    links:
       - db
+      - client
+
+  client:
+    image: node:14
+    working_dir: /var/www/client
+    command: yarn start
+    env_file:
+      - .env
+    volumes:
+      - ./client/:/var/www/client
+    ports:
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
+    
