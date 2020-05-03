@@ -83,6 +83,9 @@ const useStyles = makeStyles((theme) => ({
     loginModalTextInputs : {
       margin: theme.spacing(1),
       width: "80%"
+    },
+    opacity: {
+      opacity:0.3
     }
   }));
 
