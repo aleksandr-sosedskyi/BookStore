@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.utils import timezone
 
 from accounts.models import Profile
@@ -34,10 +34,13 @@ class SignUpSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     """ User profile serializer """
     email = serializers.EmailField(source='user.email', required=False)
-    
+
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = (
+            'id', 'user', 'first_name', 'last_name', 'phone', 
+            'created_at', 'updated_at', 'email')
+        read_only_fields = ('created_at', 'updated_at', 'id')
 
     def update(self, instance, validated_data):
         instance.first_name = validated_data.get('first_name', instance.first_name)
@@ -48,4 +51,15 @@ class ProfileSerializer(serializers.ModelSerializer):
             user.email = validated_data.get('user')['email']
             user.save()
         return instance
+
+
+class LoginSerializer(serializers.Serializer):
+  email = serializers.CharField(max_length=255)
+  password = serializers.CharField(max_length=255)
+
+  def validate(self, data):
+    user = authenticate(**data, request=self.context.get('request'))
+    if user and user.is_active:
+      return user
+    raise serializers.ValidationError("Incorrect Credentials")
         

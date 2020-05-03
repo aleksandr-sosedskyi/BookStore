@@ -5,13 +5,13 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 
 from accounts.routers import router
-from accounts.views import signup
+from accounts.views import signup, LoginView
 
 
 app_name = 'accounts'
 
 urlpatterns = [
     path('signup/', signup, name='signup'),
-    path('login/', obtain_auth_token, name='login'),
+    path('login/', LoginView.as_view(), name='login'),
     path('', include(router.urls))
 ]

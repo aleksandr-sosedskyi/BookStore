@@ -75,7 +75,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 class Profile(models.Model):
     """ User Profile Model """
-    user = models.ForeignKey(get_user_model(), related_name='profile', on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), related_name='profile', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)

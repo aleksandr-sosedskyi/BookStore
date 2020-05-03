@@ -29,10 +29,11 @@ class AuthTestCase(APITestCase):
 
     def test_login_success(self):
         """ Test successfull Login """
-        user = self.User.objects.create_user(email=self.email, password=self.password)
+        user = UserFactory()
+        profile = ProfileFactory(user=user)
         data = {
-            "username": self.email,
-            "password": self.password
+            "email": user.email,
+            "password": 'Example11200'
         }
         response = self.client.post(reverse('accounts:login'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -40,7 +41,7 @@ class AuthTestCase(APITestCase):
     def test_block_ip(self):
         """ Test Blocking IP address """
         data = {
-            'username': self.email,
+            'email': self.email,
             'password1': self.password,
             'password2': self.password
         }
@@ -51,7 +52,7 @@ class AuthTestCase(APITestCase):
     def test_rate_requests(self):
         user = UserFactory()
         data = {
-            'username': user.email,
+            'email': user.email,
             'password': 'wrong_password'
         }
         for _ in range(3):
