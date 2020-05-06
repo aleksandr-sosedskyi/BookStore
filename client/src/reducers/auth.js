@@ -13,7 +13,8 @@ const initialState = {
     isAuthenticated: null,
     isLoading: false,
     profile: null,
-    signInErrors: null
+    signInErrors: null,
+    signUpErrors: {}
 };
 
 export default function(state=initialState, action) {
@@ -30,6 +31,7 @@ export default function(state=initialState, action) {
                 isAuthenticated: true,
                 profile: action.payload,
                 signInErrors: null,
+                signUpErrors: {}
             }
         case REGISTER_SUCCESS:
         case LOGIN_SUCCESS:
@@ -39,9 +41,9 @@ export default function(state=initialState, action) {
                 ...action.payload,
                 isAuthenticated: true,
                 isLoading: false,
-                signInErrors: null
+                signInErrors: null,
+                signUpErrors: {}
             }
-        case REGISTER_FAIL:
         case LOGIN_FAIL:
             localStorage.removeItem('token');
             return {
@@ -51,6 +53,16 @@ export default function(state=initialState, action) {
                 isLoading: false,
                 profile: null,
                 signInErrors: action.payload
+            }
+        case REGISTER_FAIL:
+            localStorage.removeItem('token');
+            return {
+                ...state,
+                token: null,
+                isAuthenticated: false,
+                isLoading: false,
+                profile: null,
+                signUpErrors: action.payload
             }
         case LOGOUT_SUCCESS:
             localStorage.removeItem('token');

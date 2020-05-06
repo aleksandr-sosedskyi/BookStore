@@ -91,6 +91,11 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: "0px",
       color: "red",
       fontSize: "0.9rem"
+    },
+    signUpErrorText: {
+      marginBottom: "0px",
+      color: "red",
+      fontSize: "0.7rem"
     }
   }));
 

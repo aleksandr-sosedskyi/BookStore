@@ -28,20 +28,29 @@ const ModalLogin = (props) => {
         signType,
     } = props;
 
-    const [signInValues, setSignInValues] = useState({
+    const defaultStateSignIn = {
         'email': '',
         'password': '' 
-    })
+    }
 
-    const [signUpValues, setSignUpValues] = useState({
+    const defaultStateSignUp = {
         'firsName': '',
         'lastName': '',
         'phone': '',
         'email': '',
         'password1': '',
         'password2': ''
-    })
-
+    }
+    const [signInValues, setSignInValues] = useState(defaultStateSignIn)
+    const [signUpValues, setSignUpValues] = useState(defaultStateSignUp)
+    console.log(props.auth.signUpErrors);
+    if (props.auth.isAuthenticated && 
+        (Object.keys(signInValues).filter(item=> signInValues[item] != "").length || 
+        Object.keys(signUpValues).filter(item=> signUpValues[item] != "").length)) {
+            setSignInValues(defaultStateSignIn);
+            setSignUpValues(defaultStateSignUp);
+        }
+    
     const handleSignInChange = (event) => {
         let obj = Object.assign({}, signInValues);
         obj[event.target.name] = event.target.value
@@ -71,6 +80,11 @@ const ModalLogin = (props) => {
             signUpValues['email'],
             signUpValues['password'],
         )
+    }
+
+    const formatErrorText = (text) => {
+        if (typeof(text) === 'string') return text;
+        return text[0];
     }
 
     return (
@@ -121,7 +135,7 @@ const ModalLogin = (props) => {
                             }}
                         />
                         <TextField
-                            className={classes.loginModalTextInputs + " mt-4"}
+                            className={classes.loginModalTextInputs + " mt-3"}
                             id="login-password"
                             label="Пароль"
                             name='password'
@@ -168,6 +182,11 @@ const ModalLogin = (props) => {
                             ),
                             }}
                         />
+                        {props.auth.signUpErrors['first_name'] && (
+                            <p className={classes.signUpErrorText}>
+                                {formatErrorText(props.auth.signUpErrors['first_name'])}
+                            </p>
+                        )}
                         <TextField
                             className={classes.loginModalTextInputs + " mt-3"}
                             id="register-last-name"
@@ -185,6 +204,11 @@ const ModalLogin = (props) => {
                             ),
                             }}
                         />
+                        {props.auth.signUpErrors['last_name'] && (
+                            <p className={classes.signUpErrorText}>
+                                {formatErrorText(props.auth.signUpErrors['last_name'])}
+                            </p>
+                        )}
                         <TextField
                             className={classes.loginModalTextInputs + " mt-3"}
                             id="register-phone"
@@ -202,6 +226,11 @@ const ModalLogin = (props) => {
                             ),
                             }}
                         />
+                        {props.auth.signUpErrors['phone'] && (
+                            <p className={classes.signUpErrorText}>
+                                {formatErrorText(props.auth.signUpErrors['phone'])}
+                            </p>
+                        )}
                         <TextField
                             className={classes.loginModalTextInputs + " mt-3"}
                             id="register-email"
@@ -220,6 +249,11 @@ const ModalLogin = (props) => {
                             ),
                             }}
                         />
+                        {props.auth.signUpErrors['email'] && (
+                            <p className={classes.signUpErrorText}>
+                                {formatErrorText(props.auth.signUpErrors['email'])}
+                            </p>
+                        )}
                         <TextField
                             className={classes.loginModalTextInputs + " mt-4"}
                             id="register-password-1"
@@ -238,6 +272,11 @@ const ModalLogin = (props) => {
                             ),
                             }}
                         />
+                        {props.auth.signUpErrors['password'] && (
+                            <p className={classes.signUpErrorText}>
+                                {formatErrorText(props.auth.signUpErrors['password'])}
+                            </p>
+                        )}
                         <Button
                         className="mt-4"
                         color='primary'

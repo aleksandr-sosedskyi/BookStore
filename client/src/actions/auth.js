@@ -79,10 +79,9 @@ export const register = (first_name, last_name, phone, email, password ) => (dis
             })
         })
         .catch(error => {
-            console.log(error.response);
             dispatch({
                 type: REGISTER_FAIL,
-                payload: error.response.data.non_field_errors
+                payload: error.response.data
             })
         })
 }
