@@ -21,8 +21,7 @@ class AuthTestCase(APITestCase):
         """ Test successfull Registration """
         data = {
             'email': self.email,
-            'password1': self.password,
-            'password2': self.password
+            'password': self.password,
         }
         response = self.client.post(reverse('accounts:signup'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -42,8 +41,7 @@ class AuthTestCase(APITestCase):
         """ Test Blocking IP address """
         data = {
             'email': self.email,
-            'password1': self.password,
-            'password2': self.password
+            'password': self.password,
         }
         models.IPBlackList.objects.create(ip_addr='127.0.0.1')
         response = self.client.post(reverse('accounts:signup'), data, REMOTE_ADDR="127.0.0.1")

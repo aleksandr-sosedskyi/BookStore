@@ -8,12 +8,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "book152.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "152x152"
     },
     {
-      "src": "logo512.png",
+      "src": "book512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

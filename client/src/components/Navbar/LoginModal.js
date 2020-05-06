@@ -17,6 +17,7 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline"
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import PhoneIcon from '@material-ui/icons/Phone';
+import { login, register } from "../../actions/auth";
 
 const ModalLogin = (props) => {
     const {
@@ -24,7 +25,7 @@ const ModalLogin = (props) => {
         classes,
         open,
         handleLoginModal,
-        signType
+        signType,
     } = props;
 
     const [signInValues, setSignInValues] = useState({
@@ -41,14 +42,35 @@ const ModalLogin = (props) => {
         'password2': ''
     })
 
-    // TODO
     const handleSignInChange = (event) => {
-
+        let obj = Object.assign({}, signInValues);
+        obj[event.target.name] = event.target.value
+        setSignInValues(obj);
     }
 
-    // TODO
     const handleSignUpChange = (event) => {
+        let obj = Object.assign({}, signUpValues);
+        obj[event.target.name] = event.target.value
+        setSignUpValues(obj);
+    }
 
+    const submitSignIn = (e) => {
+        e.preventDefault();
+        props.login(
+            signInValues['email'],
+            signInValues['password']
+        )
+    }
+
+    const submitSignUp = (e) => {
+        e.preventDefault();
+        props.register(
+            signUpValues['firstName'],
+            signUpValues['lastName'],
+            signUpValues['phone'],
+            signUpValues['email'],
+            signUpValues['password'],
+        )
     }
 
     return (
@@ -76,7 +98,10 @@ const ModalLogin = (props) => {
                     </button>
                 </div>
                 {signType == 'signIn' ? (
-                    <form className='pt-4 px-2 text-center'>
+                    <form onSubmit={submitSignIn} className='pt-4 px-2 text-center'>
+                        {props.auth.signInErrors && (
+                            <p className={classes.errorMessage}>{props.auth.signInErrors}</p>
+                        )}
                         <TextField
                             className={classes.loginModalTextInputs + " mt-3"}
                             id="login-email"
@@ -85,6 +110,7 @@ const ModalLogin = (props) => {
                             type='email'
                             size='small'
                             onChange={handleSignInChange}
+                            value={signInValues['email'] || ''}
                             variant='outlined'
                             InputProps={{
                             startAdornment: (
@@ -102,6 +128,7 @@ const ModalLogin = (props) => {
                             type='password'
                             size='small'
                             onChange={handleSignInChange}
+                            value={signInValues['password'] || ''}
                             variant='outlined'
                             InputProps={{
                             startAdornment: (
@@ -115,6 +142,7 @@ const ModalLogin = (props) => {
                         className="mt-4"
                         color='primary'
                         variant='contained'
+                        type="submit"
                         >
                             Войти
                         </Button>
@@ -122,7 +150,7 @@ const ModalLogin = (props) => {
                     </form>
                 ):
                 (
-                    <form className='pt-4 pb-4 px-2 text-center'>
+                    <form onSubmit={submitSignUp} className='pt-4 pb-4 px-2 text-center'>
                         <TextField
                             className={classes.loginModalTextInputs + " mt-3"}
                             id="register-first-name"
@@ -131,6 +159,7 @@ const ModalLogin = (props) => {
                             size='small'
                             variant='outlined'
                             onChange={handleSignUpChange}
+                            value={signUpValues['firstName'] || ''}
                             InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -146,6 +175,7 @@ const ModalLogin = (props) => {
                             name="lastName"
                             size='small'
                             onChange={handleSignUpChange}
+                            value={signUpValues['lastName'] || ''}
                             variant='outlined'
                             InputProps={{
                             startAdornment: (
@@ -162,6 +192,7 @@ const ModalLogin = (props) => {
                             name='phone'
                             size='small'
                             onChange={handleSignUpChange}
+                            value={signUpValues['phone'] || ''}
                             variant='outlined'
                             InputProps={{
                             startAdornment: (
@@ -178,6 +209,7 @@ const ModalLogin = (props) => {
                             type='email'
                             name='email'
                             onChange={handleSignUpChange}
+                            value={signUpValues['email'] || ''}
                             size='small'
                             variant='outlined'
                             InputProps={{
@@ -195,6 +227,7 @@ const ModalLogin = (props) => {
                             name='password'
                             type='password'
                             onChange={handleSignUpChange}
+                            value={signUpValues['password'] || ''}
                             size='small'
                             variant='outlined'
                             InputProps={{
@@ -209,6 +242,7 @@ const ModalLogin = (props) => {
                         className="mt-4"
                         color='primary'
                         variant='contained'
+                        type="submit"
                         >
                             Зарегистрироваться
                         </Button>
@@ -219,4 +253,8 @@ const ModalLogin = (props) => {
     );
 }
 
-export default ModalLogin;
+const mapStateToProps = (state) => ({
+    auth: state.auth
+})
+
+export default connect(mapStateToProps, {login, register})(ModalLogin);

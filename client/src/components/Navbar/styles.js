@@ -85,7 +85,12 @@ const useStyles = makeStyles((theme) => ({
       width: "80%"
     },
     opacity: {
-      opacity:0.3
+      opacity:0.4
+    },
+    errorMessage: {
+      marginBottom: "0px",
+      color: "red",
+      fontSize: "0.9rem"
     }
   }));
 

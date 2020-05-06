@@ -13,7 +13,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { CATALOG } from "../../constants/routes";
 import useStyles from "./styles";
 import { connect } from 'react-redux';
-import { login } from "../../actions/auth";
+import { logout } from "../../actions/auth";
 import LoginModal from "./LoginModal";
 
 const Navbar = (props) => {
@@ -39,7 +39,13 @@ const Navbar = (props) => {
 
   const handleChangeSignType = (type) => {
     setSignType(type);
-}
+  }
+
+  const handleLogout = () => {
+    handleMenuClose();
+    setLoginModalOpen(false);
+    props.logout();
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -53,16 +59,16 @@ const Navbar = (props) => {
         onClose={handleMenuClose}
       >
         {props.isAuthenticated ? (
-          <>
+          <div>
             <MenuItem onClick={handleMenuClose}>Профиль</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Выход</MenuItem>
-          </>
+            <MenuItem onClick={handleLogout}>Выход</MenuItem>
+          </div>
         ):
         (
-          <>
+          <div>
             <MenuItem onClick={() => handleLoginModal(true, 'signIn')}>Войти</MenuItem>
             <MenuItem onClick={() => handleLoginModal(true, 'signUp')}>Регистрация</MenuItem>
-          </>
+          </div>
         )}
         
       </Menu>
@@ -133,7 +139,7 @@ const Navbar = (props) => {
       </AppBar>
       {renderMenu}
       <LoginModal 
-      open={loginModalOpen} 
+      open={props.isAuthenticated ? false : loginModalOpen} 
       handleLoginModal={handleLoginModal} 
       classes={classes}
       signType={signType}
@@ -147,4 +153,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, {login})(Navbar);
+export default connect(mapStateToProps, { logout })(Navbar);
