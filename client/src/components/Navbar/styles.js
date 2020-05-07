@@ -1,11 +1,16 @@
 import { fade, makeStyles } from '@material-ui/core/styles';
 
+const drawerWidth = 240;
+
 const useStyles = makeStyles((theme) => ({
     grow: {
       flexGrow: 1,
     },
     menuButton: {
       marginRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
+      },
     },
     title: {
       display: "none",
@@ -96,7 +101,13 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: "0px",
       color: "red",
       fontSize: "0.7rem"
-    }
+    },
+    appBar: {
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(100% - 240px)`,
+        marginLeft: 240,
+      },
+    },
   }));
 
 export default useStyles;

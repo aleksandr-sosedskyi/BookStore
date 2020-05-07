@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,6 +15,8 @@ import useStyles from "./styles";
 import { connect } from 'react-redux';
 import { logout } from "../../actions/auth";
 import LoginModal from "./LoginModal";
+import MenuIcon from '@material-ui/icons/Menu';
+
 
 const Navbar = (props) => {
   const classes = useStyles();
@@ -76,8 +78,17 @@ const Navbar = (props) => {
 
   return (
     <div className={classes.grow}>
-      <AppBar style={{backgroundColor: '#1a1a1a'}} position="static">
+      <AppBar style={{backgroundColor: '#1a1a1a'}} className={classes.appBar} position="fixed">
         <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={props.handleDrawerToggle}
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
           <Link 
             to={CATALOG}
             style={{

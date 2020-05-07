@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
-import Navbar from "../../components/Navbar/Navbar";
+import React from 'react';
 import { connect } from "react-redux";
 import getProfile from "../../actions/profiles";
-
+import Dashboard from "../../components/Dashboard/Dashboard";
 
 export const Catalog = (props) => {
     return (
-        <Navbar />
+        <>
+            <Dashboard />
+        </>
     );
 }
 
