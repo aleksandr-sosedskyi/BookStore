@@ -41,9 +41,10 @@ const ModalLogin = (props) => {
         'password1': '',
         'password2': ''
     }
-    const [signInValues, setSignInValues] = useState(defaultStateSignIn)
-    const [signUpValues, setSignUpValues] = useState(defaultStateSignUp)
-    console.log(props.auth.signUpErrors);
+    
+    const [signInValues, setSignInValues] = useState(defaultStateSignIn);
+    const [signUpValues, setSignUpValues] = useState(defaultStateSignUp);
+
     if (props.auth.isAuthenticated && 
         (Object.keys(signInValues).filter(item=> signInValues[item] != "").length || 
         Object.keys(signUpValues).filter(item=> signUpValues[item] != "").length)) {

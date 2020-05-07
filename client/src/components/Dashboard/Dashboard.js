@@ -1,40 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import Navbar from "../Navbar/Navbar";
-
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-}));
+import { connect } from "react-redux";
+import { getGenres } from "../../actions/genres";
+import useStyles from "./styles";
+import BookCatalog from "../BookCatalog/BookCatalog";
 
 const Dashboard = (props) => {
   const { window } = props;
@@ -46,26 +24,26 @@ const Dashboard = (props) => {
     setMobileOpen(!mobileOpen);
   };
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
+
   const drawer = (
     <div>
       <Typography className='mt-3 mb-3' align="center" variant="h5" component="h5">
-        Фильтры
+        Жанры
       </Typography>
       <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+      <List component="nav" aria-label="secondary mailbox folder">
+        {props.genres.map((genre, index) => (
+          <ListItem
+            button
+            selected={selectedIndex === 2}
+            onClick={(event) => handleListItemClick(event, 2)}
+          >
+            <ListItemText primary={`${genre.name}`} />
           </ListItem>
         ))}
       </List>
@@ -73,6 +51,10 @@ const Dashboard = (props) => {
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
+  
+  useEffect(() => {
+    props.getGenres();
+  }, props.genres)
 
   return (
     <div className={classes.root}>
@@ -109,10 +91,16 @@ const Dashboard = (props) => {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>
+      <main>
+        <div className={classes.toolbar} />
+        <BookCatalog />
       </main>
     </div>
   );
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => ({
+  genres: state.genres.genres
+})
+
+export default connect(mapStateToProps, {getGenres} )(Dashboard);
