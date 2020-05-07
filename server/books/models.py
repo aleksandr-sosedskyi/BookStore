@@ -5,20 +5,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator, MinLeng
 from accounts.models import Profile
 
 
-class AgeCategory(models.Model):
-    """ Book age category """
-    name = models.CharField(max_length=50, validators=[MinLengthValidator(3),])
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Age Category'
-        verbose_name_plural = 'Age Categories'
-
-
 class Genre(models.Model):
     """ Book genre """
     name = models.CharField(max_length=50, validators=[MinLengthValidator(3),])
@@ -35,12 +21,6 @@ class Genre(models.Model):
 
 class Book(models.Model):
     """ Book model """
-    age_category = models.ForeignKey(
-        AgeCategory,
-        related_name='books',
-        on_delete=models.SET_NULL,
-        null=True
-    )
     genre = models.ForeignKey(
         Genre, 
         related_name='books', 

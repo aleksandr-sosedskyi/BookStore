@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 
 from books import models
 from books.factories import (
-    AgeCategoryFactory,
     GenreFactory,
     BookFactory,
     BookLikeDislikeFactory,
@@ -45,51 +44,6 @@ profile_data = {
     'user': 'TOOVERRIDE',
 }
 
-
-class AgeCategoryTestCase(APITestCase):
-    def setUp(self):
-        """ Initial setting for client """
-        self.user = UserFactory()
-        self.token = Token.objects.get(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
-
-    def test_create_category(self):
-        """ Test creating age category """
-        response = self.client.post(reverse('books:age-categories-list'), data={'name': 'Test'})
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['name'], 'Test')
-    
-    def test_get_categories(self):
-        """ Test retrieving all age categories """
-        AgeCategoryFactory()
-        response = self.client.get(reverse('books:age-categories-list'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data)
-
-    def test_retrieve_category(self):
-        """ Test retrieving detail age category """
-        category = AgeCategoryFactory()
-        url = reverse('books:age-categories-detail', kwargs={'pk': category.pk})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], category.id)
-
-    def test_delete_category(self):
-        """ Test deleting age category """
-        category = AgeCategoryFactory()
-        url = reverse('books:age-categories-detail', kwargs={'pk': category.pk})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_update_category(self):
-        """ Test updating category """
-        category = AgeCategoryFactory()
-        url = reverse('books:age-categories-detail', kwargs={'pk': category.pk})
-        response = self.client.patch(url, {'name': 'new_name'})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        category.refresh_from_db()
-        self.assertEqual(category.name, 'new_name')
-        
 
 class GenreTestCase(APITestCase):
     def setUp(self):
@@ -144,7 +98,6 @@ class BookTestCase(APITestCase):
         self.user = UserFactory()
         self.token = Token.objects.get(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
-        self.category = AgeCategoryFactory()
         self.genre = GenreFactory()
         self.test_data = book_data.copy()
         self.test_data.update({

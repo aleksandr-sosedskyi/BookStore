@@ -12,18 +12,10 @@ class GenreFactory(factory.django.DjangoModelFactory):
     name = 'Example name'
 
 
-class AgeCategoryFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.AgeCategory
-    
-    name = 'Example name'
-
-
 class BookFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Book
     
-    age_category = factory.SubFactory(AgeCategoryFactory)
     genre = factory.SubFactory(GenreFactory)
     year = 2000
     title = 'Example title'
