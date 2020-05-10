@@ -11,7 +11,6 @@ from books import models
 from books.factories import (
     GenreFactory,
     BookFactory,
-    BookLikeDislikeFactory,
     CommentFactory
 )
 
@@ -24,12 +23,10 @@ User = get_user_model()
 
 # Test data for Book model
 book_data = {
-    'age_category': 'TO_OVERRIDE',
     'genre': 'TO_OVERRIDE',
     'author': 'Author',
     'title': 'Title',
     'year': 2000,
-    'product_code': 'QWE123',
     'pages': 100,
     'description': 'Test description',
     'in_stock': 1,
@@ -101,7 +98,6 @@ class BookTestCase(APITestCase):
         self.genre = GenreFactory()
         self.test_data = book_data.copy()
         self.test_data.update({
-            'age_category': self.category.pk,
             'genre': self.genre.pk
         })
 
@@ -143,67 +139,11 @@ class BookTestCase(APITestCase):
         self.assertTrue(response.data)
         
 
-class BookLikeDislikeTestCase(APITestCase):
-    """ Test book liking and disliking """
-
-    def setUp(self):
-        """ Initial settings (create user, profile, token category, genre, book) """
-        self.profile = ProfileFactory()
-        self.token = Token.objects.first().key
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
-        self.book = BookFactory()
-        self.test_like_data = {
-            'profile': self.profile.pk,
-            'book': self.book.pk,
-            'like_type': 'like',
-        }
-
-    def test_create_like(self):
-        """ Test creating book like """
-        response = self.client.post(
-            reverse('books:likes-dislikes-list'), 
-            data=self.test_like_data
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.data)
-    
-    def test_get_likes(self):
-        """ Test retrieving all likes/dislikes """
-        BookLikeDislikeFactory()
-        response = self.client.get(reverse('books:likes-dislikes-list'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data)
-    
-    def test_get_like(self):
-        """ Test retrieving a like/dislike """
-        like = BookLikeDislikeFactory()
-        url = reverse('books:likes-dislikes-detail', kwargs={'pk': like.pk})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data)
-    
-    def test_update_like(self):
-        """ Test updating a like/dislike """
-        like = BookLikeDislikeFactory()
-        url = reverse('books:likes-dislikes-detail', kwargs={'pk': like.pk})
-        response = self.client.patch(url, {'like_type': 'dislike'})
-        like.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(like.like_type, 'dislike')
-    
-    def test_delete_like(self):
-        """ Test deleting a like/dislike """
-        like = BookLikeDislikeFactory()
-        url = reverse('books:likes-dislikes-detail', kwargs={'pk': like.pk})
-        response = self.client.delete(url)
-        self.assertFalse(models.BookLikeDislike.objects.filter(pk=like.pk).exists())
-
-
 class CommentTestCase(APITestCase):
     """ Test Comment Endpoint """
 
     def setUp(self):
-        """ Initial settings (create user, profile, token category, genre, book) """
+        """ Initial settings (create user, profile, token, genre, book) """
         self.profile = ProfileFactory()
         self.token = Token.objects.first().key
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)

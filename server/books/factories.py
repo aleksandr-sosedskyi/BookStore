@@ -19,21 +19,11 @@ class BookFactory(factory.django.DjangoModelFactory):
     genre = factory.SubFactory(GenreFactory)
     year = 2000
     title = 'Example title'
-    product_code = 'Example code'
     author = 'Example author'
     pages = 200
     description = 'Example description'
     price = 200
     in_stock = 100
-
-
-class BookLikeDislikeFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.BookLikeDislike
-
-    book = factory.SubFactory(BookFactory)
-    profile = factory.SubFactory(account_factories.ProfileFactory)
-    like_type = 'like'
 
 
 class CommentFactory(factory.django.DjangoModelFactory):

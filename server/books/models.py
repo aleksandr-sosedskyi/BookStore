@@ -32,10 +32,6 @@ class Book(models.Model):
     )
     title = models.CharField(max_length=150, validators=[MinLengthValidator(3),])
     image = models.FileField(upload_to='books/', blank=True)
-    views = models.PositiveIntegerField(default=0)
-    likes = models.PositiveIntegerField(default=0)
-    dislikes = models.PositiveIntegerField(default=0)
-    product_code = models.CharField(max_length=100)
     author = models.CharField(max_length=255, validators=[MinLengthValidator(3),])
     pages = models.PositiveIntegerField(validators=[MinValueValidator(1),])
     description = models.TextField(validators=[MinLengthValidator(10), ])
@@ -51,34 +47,6 @@ class Book(models.Model):
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
     
-
-class BookLikeDislike(models.Model):
-    """ Keep book likes and dislikes """
-    book = models.ForeignKey(
-        Book, 
-        related_name='likes_dislikes', 
-        on_delete=models.CASCADE
-    )
-    profile = models.ForeignKey(
-        Profile,
-        related_name='likes_dislikes',
-        on_delete=models.CASCADE
-    )
-    TYPE_CHOICES = (
-        ('like', 'Like'),
-        ('dislike', 'Dislike')
-    )
-    like_type = models.CharField(max_length=7, choices=TYPE_CHOICES)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.book.title + " - " + self.profile.first_name
-
-    class Meta:
-        verbose_name = 'Book Like/Dislike'
-        verbose_name = 'Book Likes/Dislikes/'
-
 
 class Comment(models.Model):
     """ Model to keep comments to book """

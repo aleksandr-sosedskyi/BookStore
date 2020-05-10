@@ -21,13 +21,6 @@ class BookViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, ]
 
 
-class BookLikeDislikeViewSet(ModelViewSet):
-    """ ViewSet for Book likes and dislikes """
-    queryset = models.BookLikeDislike.objects.all()
-    serializer_class = serializers.BookLikeDislikeSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, ]
-
-
 class CommentViewSet(ModelViewSet):
     """ ViewSet for Book comment """
     queryset = models.Comment.objects.all()

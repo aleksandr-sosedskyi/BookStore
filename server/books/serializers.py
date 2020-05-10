@@ -12,17 +12,15 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     """ Serializer for Book model """
+    genre_name = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Book
         fields = '__all__'
-    
 
-class BookLikeDislikeSerializer(serializers.ModelSerializer):
-    """ Serializer for book likes and dislikes """
-    class Meta: 
-        model = models.BookLikeDislike
-        fields = '__all__'
-        
+    def get_genre_name(self, obj):
+        return obj.genre.name
+    
 
 class CommentSerializer(serializers.ModelSerializer):
     """ Serializer for Comment model """

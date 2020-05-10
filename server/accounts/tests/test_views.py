@@ -6,7 +6,6 @@ from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 
 from accounts import models
-from accounts.serializers import SignUpSerializer
 from accounts.factories import UserFactory, ProfileFactory
 
 import json
@@ -22,6 +21,9 @@ class AuthTestCase(APITestCase):
         data = {
             'email': self.email,
             'password': self.password,
+            'first_name': 'Name',
+            'last_name': 'Name',
+            'phone': '380661200000',
         }
         response = self.client.post(reverse('accounts:signup'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -74,13 +76,6 @@ class ProfileTest(APITestCase):
             'phone': '380661204500',
             'user': self.user,
         }
-
-    def test_create_profile(self):
-        """ Test creating profile """
-        data = self.test_data.copy()
-        data['user'] = self.test_data['user'].pk
-        response = self.client.post(reverse('accounts:profiles-list'), data=data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_profiles(self):
         """ Test getting profile queryset """
