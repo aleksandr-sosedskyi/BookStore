@@ -18,8 +18,11 @@ const useStyles = makeStyles((theme) => ({
       width: drawerWidth,
     },
     content: {
-      flexGrow: 1,
+      width: `calc(100vw - ${drawerWidth})`,
       padding: theme.spacing(3),
+      [theme.breakpoints.up('sm')]: {
+        width: "100vw"
+      }
     },
 }));
 

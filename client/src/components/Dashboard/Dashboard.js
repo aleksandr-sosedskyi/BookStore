@@ -91,7 +91,7 @@ const Dashboard = (props) => {
           </Drawer>
         </Hidden>
       </nav>
-      <main>
+      <main className={classes.content}>
         <div className={classes.toolbar} />
         <BookCatalog />
       </main>

@@ -41,9 +41,9 @@ export const login = (email, password) => dispatch => {
 
 export const loadUser = () => (dispatch, getState) => {
     // User loading 
-    dispatch({type: USER_LOADING});
-
-    axios
+    if('Authorization' in tokenConfig(getState)['headers']){
+        dispatch({type: USER_LOADING});
+        axios
         .get(`${API_URL}/accounts/user`, tokenConfig(getState))
         .then(response => {
             dispatch({
@@ -54,6 +54,7 @@ export const loadUser = () => (dispatch, getState) => {
         .catch(error => {
             console.log(error) // TODO
         })
+    }
 }
 
 export const logout = () => (dispatch, getState) => {
