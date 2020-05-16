@@ -16,9 +16,15 @@ class GenreViewSet(ModelViewSet):
 
 class BookViewSet(ModelViewSet):
     """ ViewSet for Book model """
-    queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, ]
+
+    def get_queryset(self):
+        if (genre_id := self.request.GET.get('genre')) is not None:
+            queryset = models.Book.objects.filter(genre=genre_id)
+        else: 
+            queryset = models.Book.objects.all()
+        return queryset
 
 
 class CommentViewSet(ModelViewSet):

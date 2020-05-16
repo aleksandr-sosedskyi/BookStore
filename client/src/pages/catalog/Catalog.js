@@ -6,7 +6,7 @@ import Dashboard from "../../components/Dashboard/Dashboard";
 export const Catalog = (props) => {
     return (
         <>
-            <Dashboard />
+            <Dashboard currentGenreId={props.match.params.genre}/>
         </>
     );
 }

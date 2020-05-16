@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { logout } from "../../actions/auth";
 import LoginModal from "./LoginModal";
 import MenuIcon from '@material-ui/icons/Menu';
-
+import nureImage from '../../static/images/nure.png'
 
 const Navbar = (props) => {
   const classes = useStyles();
@@ -99,7 +99,7 @@ const Navbar = (props) => {
           >
             <img 
               style={{width:'25px', height:'20px'}} 
-              src={process.env.PUBLIC_URL + 'nure.png'} 
+              src={nureImage} 
               className='mr-3'
             />
           </Link>

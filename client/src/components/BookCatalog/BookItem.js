@@ -2,7 +2,8 @@ import React from "react";
 import useStyles from "./styles";
 import { Button } from "@material-ui/core";
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import { API_URL } from "../../constants/routes";
+import { Link } from "react-router-dom";
+import { CATALOG } from "../../constants/routes";
 
 const BookItem = (props) => {
     const book = props.book;

@@ -15,6 +15,9 @@ const useStyles = makeStyles({
     },
     bookBlock : {
         border: "1px solid #ccc",
+        '&:hover': {
+            transform: 'scale(0.98)'
+        }
     },
     description: {
         fontFamily: "Arial, sans-serif",

@@ -13,21 +13,18 @@ import { connect } from "react-redux";
 import { getGenres } from "../../actions/genres";
 import useStyles from "./styles";
 import BookCatalog from "../BookCatalog/BookCatalog";
+import { Link } from "react-router-dom";
+import { CATALOG } from "../../constants/routes";
 
 const Dashboard = (props) => {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const currentGenreId = props.currentGenreId;
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
   };
 
   const drawer = (
@@ -37,14 +34,23 @@ const Dashboard = (props) => {
       </Typography>
       <Divider />
       <List component="nav" aria-label="secondary mailbox folder">
-        {props.genres.map((genre, index) => (
+        <Link to={`${CATALOG}/all`} className={classes.genreLink}>
           <ListItem
             button
-            selected={selectedIndex === 2}
-            onClick={(event) => handleListItemClick(event, 2)}
+            selected={currentGenreId === 'all'}
           >
-            <ListItemText primary={`${genre.name}`} />
+            <ListItemText primary={`Все жанры`} />
           </ListItem>
+        </Link>
+        {props.genres.map((genre, index) => (
+          <Link to={`${CATALOG}/${genre.id}`} className={classes.genreLink}>
+            <ListItem
+              button
+              selected={currentGenreId == genre.id}
+            >
+              <ListItemText primary={`${genre.name}`} />
+            </ListItem>
+          </Link>
         ))}
       </List>
     </div>
@@ -93,7 +99,7 @@ const Dashboard = (props) => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <BookCatalog />
+        <BookCatalog currentGenreId={currentGenreId} />
       </main>
     </div>
   );

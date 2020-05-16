@@ -24,6 +24,14 @@ const useStyles = makeStyles((theme) => ({
         width: "100vw"
       }
     },
+    genreLink: {
+      color: "#333",
+      textDecoration: "none",
+      '&:hover': {
+        color: "#333",
+        textDecoration: "none"
+      }
+    }
 }));
 
 export default useStyles;
