@@ -41,8 +41,18 @@ const useStyles = makeStyles({
         fontWeight: "700",
         marginBottom: 0
     },
-    commentText: {
-
+    commentForm: {
+        width: "90%",
+        margin: "0.5rem auto"
+    },
+    commentField:{
+        display: "block",
+    },
+    commentError: {
+        fontSize: '0.78rem',
+        marginTop: '2px',
+        textAlign: 'center',
+        color: "red"
     }
 })
 

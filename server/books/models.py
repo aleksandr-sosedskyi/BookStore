@@ -44,6 +44,7 @@ class Book(models.Model):
         return self.title + " - " + self.author
     
     class Meta:
+        ordering = ['-created_at']
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
     
@@ -68,5 +69,6 @@ class Comment(models.Model):
         return self.book.title
     
     class Meta:
+        ordering = ['-created_at']
         verbose_name = 'Book comment'
         verbose_name_plural = 'Book comments'

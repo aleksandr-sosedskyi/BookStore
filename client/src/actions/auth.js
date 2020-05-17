@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../constants/routes';
+import { tokenConfig } from './config';
 
 import {
     USER_LOADED,
@@ -86,19 +87,3 @@ export const register = (first_name, last_name, phone, email, password ) => (dis
             })
         })
 }
-
-export const tokenConfig = (getState) => {
-    const token = getState().auth.token;
-  
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-  
-    if (token) {
-      config.headers['Authorization'] = `Token ${token}`;
-    }
-  
-    return config;
-  };
