@@ -32,6 +32,5 @@ class CommentFactory(factory.django.DjangoModelFactory):
     
     profile = factory.SubFactory(account_factories.ProfileFactory)
     book = factory.SubFactory(BookFactory)
-    mark = 3
     text = 'Example text'
 

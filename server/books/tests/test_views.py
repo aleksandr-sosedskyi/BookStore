@@ -152,7 +152,6 @@ class CommentTestCase(APITestCase):
             'profile': self.profile.pk,
             'book': self.book.pk,
             'text': 'Test text',
-            'mark': 4
         }
     
     def test_create_comment(self):

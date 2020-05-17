@@ -6,7 +6,7 @@ import BookInfo from "../../components/BookDetail/BookInfo";
 const BookDetail = (props) => {
     return (
         <>
-            <Dashboard mainComponent={BookInfo} currentGenreId={props.match.params.genre}/>
+            <Dashboard mainComponent={BookInfo} bookId={props.match.params.book}/>
         </>
     );
 }

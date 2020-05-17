@@ -61,14 +61,11 @@ class Comment(models.Model):
         on_delete=models.CASCADE
     )
     text = models.TextField(validators=[MinLengthValidator(5),])
-    mark = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)]
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.book.title + " " + self.mark
+        return self.book.title
     
     class Meta:
         verbose_name = 'Book comment'

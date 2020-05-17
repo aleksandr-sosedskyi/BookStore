@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
 from books import models
 from books import serializers
@@ -20,11 +21,19 @@ class BookViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, ]
 
     def get_queryset(self):
+        """ Get books, if there's provided genre, then filter by it """
         if (genre_id := self.request.GET.get('genre')) is not None:
             queryset = models.Book.objects.filter(genre=genre_id)
         else: 
             queryset = models.Book.objects.all()
         return queryset
+    
+    def retrieve(self, request, pk=None):
+        """ Retrive book by provided id """
+        queryset = models.Book.objects.all()
+        book = get_object_or_404(queryset, pk=pk)
+        serializer = serializers.BookDetailSerializer(book)
+        return Response(serializer.data)
 
 
 class CommentViewSet(ModelViewSet):

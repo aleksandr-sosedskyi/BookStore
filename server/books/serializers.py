@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from books import models
 
+from accounts.serializers import ProfileSerializer
+
 
 class GenreSerializer(serializers.ModelSerializer):
     """ Serializer for Genre model """
@@ -12,15 +14,11 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     """ Serializer for Book model """
-    genre_name = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Book
         fields = '__all__'
 
-    def get_genre_name(self, obj):
-        return obj.genre.name
-    
 
 class CommentSerializer(serializers.ModelSerializer):
     """ Serializer for Comment model """
@@ -28,3 +26,15 @@ class CommentSerializer(serializers.ModelSerializer):
         model = models.Comment
         fields = '__all__'
         
+        
+class BookDetailSerializer(serializers.ModelSerializer):
+    """ Serialize detail info about book """
+    genre = serializers.ReadOnlyField(source='genre.name')
+    
+    class Meta:
+        model = models.Book
+        fields = (
+            'title', 'author', 'id', 'image', 'year', 'price',
+            'pages', 'description', 'genre', 'in_stock', 'comments'
+            )
+        depth = 2

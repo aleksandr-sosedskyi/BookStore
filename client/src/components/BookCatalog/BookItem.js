@@ -3,7 +3,7 @@ import useStyles from "./styles";
 import { Button } from "@material-ui/core";
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { Link } from "react-router-dom";
-import { CATALOG, DETAIL_BOOK } from "../../constants/routes";
+import { DETAIL_BOOK } from "../../constants/routes";
 
 const BookItem = (props) => {
     const book = props.book;

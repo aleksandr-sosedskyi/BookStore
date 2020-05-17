@@ -21,6 +21,7 @@ const Dashboard = (props) => {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const currentGenreId = props.currentGenreId;
+  const bookId = props.bookId;
   
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -98,7 +99,10 @@ const Dashboard = (props) => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <props.mainComponent currentGenreId={currentGenreId} />
+        <props.mainComponent 
+        currentGenreId={currentGenreId} 
+        bookId={bookId}
+        />
       </main>
     </div>
   );
