@@ -50,6 +50,14 @@ const useStyles = makeStyles({
         margin: "0",
         opacity: "0.6"
     },
+    bookLink: {
+        color: "#333",
+        textDecoration: "none",
+        '&:hover': {
+            color: "#333",
+            textDecoration: "none"
+        }
+    }
 })
 
 export default useStyles;

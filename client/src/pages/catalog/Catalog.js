@@ -1,18 +1,15 @@
 import React from 'react';
-import { connect } from "react-redux";
-import getProfile from "../../actions/profiles";
 import Dashboard from "../../components/Dashboard/Dashboard";
+import BookCatalog from "../../components/BookCatalog/BookCatalog";
 
 export const Catalog = (props) => {
     return (
         <>
-            <Dashboard currentGenreId={props.match.params.genre}/>
+            <Dashboard mainComponent={BookCatalog} currentGenreId={props.match.params.genre}/>
         </>
     );
 }
 
-const mapStateToProps = (state) => ({
-    profiles: state.profiles.profiles
-})
 
-export default connect(mapStateToProps, { getProfile })(Catalog);
+
+export default Catalog;

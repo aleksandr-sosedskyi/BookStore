@@ -12,7 +12,6 @@ import Navbar from "../Navbar/Navbar";
 import { connect } from "react-redux";
 import { getGenres } from "../../actions/genres";
 import useStyles from "./styles";
-import BookCatalog from "../BookCatalog/BookCatalog";
 import { Link } from "react-router-dom";
 import { CATALOG } from "../../constants/routes";
 
@@ -34,7 +33,7 @@ const Dashboard = (props) => {
       </Typography>
       <Divider />
       <List component="nav" aria-label="secondary mailbox folder">
-        <Link to={`${CATALOG}/all`} className={classes.genreLink}>
+        <Link to={`${CATALOG}/all/`} className={classes.genreLink}>
           <ListItem
             button
             selected={currentGenreId === 'all'}
@@ -60,7 +59,7 @@ const Dashboard = (props) => {
   
   useEffect(() => {
     props.getGenres();
-  }, props.genres)
+  }, [props.genres.join(',')])
 
   return (
     <div className={classes.root}>
@@ -99,7 +98,7 @@ const Dashboard = (props) => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <BookCatalog currentGenreId={currentGenreId} />
+        <props.mainComponent currentGenreId={currentGenreId} />
       </main>
     </div>
   );

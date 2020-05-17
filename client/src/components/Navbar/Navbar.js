@@ -90,7 +90,7 @@ const Navbar = (props) => {
             <MenuIcon />
           </IconButton>
           <Link 
-            to={CATALOG}
+            to={`${CATALOG}/all/`}
             style={{
               textDecoration:"none",
               color: "white",
