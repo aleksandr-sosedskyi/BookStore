@@ -17,6 +17,7 @@ import { logout } from "../../actions/auth";
 import LoginModal from "./LoginModal";
 import MenuIcon from '@material-ui/icons/Menu';
 import nureImage from '../../static/images/nure.png'
+import { SHOPPING_CART } from "../../constants/routes";
 
 const Navbar = (props) => {
   const classes = useStyles();
@@ -131,9 +132,11 @@ const Navbar = (props) => {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {props.isAuthenticated && (
-              <IconButton aria-label="shopping cart" color="inherit">
-                <ShoppingCartIcon />
-              </IconButton>
+              <Link to={SHOPPING_CART}>
+                <IconButton aria-label="shopping cart" color="inherit">
+                  <ShoppingCartIcon />
+                </IconButton>
+              </Link>
             )}
             <IconButton
               edge="end"

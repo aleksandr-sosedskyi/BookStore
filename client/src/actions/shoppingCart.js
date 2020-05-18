@@ -40,7 +40,7 @@ export const addToShoppingCart = (profile, book, amount, ) => (dispatch, getStat
 export const removeFromShoppingCart = (id) => (dispatch, getState) => {
     axios
         .delete(`${API_URL}/orders/shopping-carts/${id}`, tokenConfig(getState))
-        .response(response => {
+        .then(response => {
             dispatch({
                 type: REMOVE_FROM_SHOPPING_CART,
                 payload: response.data

@@ -2,7 +2,7 @@ import {
     GET_SHOPPING_CART,
     ADD_TO_SHOPPING_CART,
     REMOVE_FROM_SHOPPING_CART
-} from "./types";
+} from "../actions/types";
 
 
 const initialState = {
@@ -20,6 +20,11 @@ export default function(state=initialState, action) {
             return {
                 ...state,
                 items: [...state.items, action.payload]
+            }
+        case REMOVE_FROM_SHOPPING_CART:
+            return {
+                ...state,
+                items: state.items.filter(item=> item.id != action.payload.id)
             }
         default: 
             return state;
