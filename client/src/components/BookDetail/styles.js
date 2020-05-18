@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     orderButton: {
         textTransform: "none",
         display: "block",
-        margin: "1rem auto"
+        margin: "0 auto 1rem auto"
     },
     infoP: {
         margin: "0.5rem"
@@ -53,6 +53,13 @@ const useStyles = makeStyles({
         marginTop: '2px',
         textAlign: 'center',
         color: "red"
+    },
+    amountSpan: {
+        display: "block",
+        fontSize: "1.4rem",
+        width: "100%",
+        marginTop: "0.8rem",
+        textAlign: "center"
     }
 })
 

@@ -75,3 +75,17 @@ class OrderSerializer(serializers.ModelSerializer):
 
         order.save()
         return order
+
+
+class ShoppingCartListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ShoppingCart
+        fields = '__all__'
+        depth = 1
+
+
+class ShoppingCartDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ShoppingCart
+        fields = '__all__'
+        

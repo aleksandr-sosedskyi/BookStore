@@ -8,12 +8,18 @@ import { MEDIA_URL } from "../../constants/routes";
 import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
 import { postComment } from '../../actions/comments';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+import { addToShoppingCart } from "../../actions/shoppingCart";
 
 const BookInfo = (props) => {
     const classes = useStyles();
-    const { bookId, book } = props;
+    const { bookId, book, profile } = props;
     const [commentErrorHide, setCommentErrorHide] = useState(true);
     const commentBlockRef = useRef(null);
+    const [amount, setAmount] = useState(1);
+
+    const orderButtonRef = useRef(null);
 
     const handleSendComment = async (event) => {
         event.preventDefault();
@@ -24,7 +30,7 @@ const BookInfo = (props) => {
         else{
             setCommentErrorHide(true);
             event.target.elements.comment.value = '';
-            props.postComment(value, book.id, props.profile.profile.id);
+            props.postComment(value, book.id, profile.profile.id);
             commentBlockRef.current.appendChild(createCommentHtml(value));
         }
     }
@@ -80,6 +86,22 @@ const BookInfo = (props) => {
         )
     }
 
+    const changeAmount = (type) => {
+        if (type === 'remove' && amount > 1){
+            setAmount(amount-1);
+        }
+        else if(type === 'add' && amount < book.in_stock){
+            setAmount(amount+1);
+        }
+    }
+
+    const handleAddToShoppingCart = () => {
+        props.addToShoppingCart(profile.profile.id, book.id, amount);
+        orderButtonRef.current.style.backgroundColor = "#636363";
+        orderButtonRef.current.innerHTML = 'Добавлено!';
+        orderButtonRef.current.disabled = true;
+    }
+
     if (Object.keys(props.book).length && props.bookId == book.id){
         return (
             <div className='container-fluid' style={{fontFamily: "Arial, sans-serif"}}>
@@ -90,11 +112,25 @@ const BookInfo = (props) => {
                         src={`${MEDIA_URL}${book.image}`}
                         />
                         <div className={classes.buttonDiv}>
+                            <span className={classes.amountSpan}>
+                                <RemoveIcon 
+                                color='secondary' 
+                                style={{cursor: "pointer"}}
+                                onClick={() => changeAmount('remove')}
+                                />
+                                <span> {amount} </span>
+                                <AddIcon 
+                                style={{color: "#14D100", cursor: "pointer" }} 
+                                onClick={() => changeAmount('add')}
+                                />
+                            </span>
                             <Button 
                             color="primary" 
                             variant='contained' 
                             className={classes.orderButton}
                             disabled={props.isAuthenticated ? false : true}
+                            ref={orderButtonRef}
+                            onClick={handleAddToShoppingCart}
                             >
                                 Добавить в корзину
                             </Button>
@@ -176,9 +212,8 @@ const BookInfo = (props) => {
 
 const mapStateToProps = (state) => ({
     book: state.books.pickedBook,
-    comment: state.comments.comment,
     isAuthenticated: state.auth.isAuthenticated,
     profile: state.auth.profile
 })
 
-export default connect(mapStateToProps, {getBook, postComment})(BookInfo);
+export default connect(mapStateToProps, {getBook, postComment, addToShoppingCart})(BookInfo);

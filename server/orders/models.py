@@ -56,3 +56,18 @@ class OrderBook(models.Model):
     class Meta:
         verbose_name = 'Book in order'
         verbose_name_plural = 'Books in orders'
+
+
+class ShoppingCart(models.Model):
+    """ Handle books in users' shopping carts """
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='shopping_cart')
+    book = models.ForeignKey(Book, related_name='shopping_cart', on_delete=models.CASCADE)
+    amount = models.PositiveSmallIntegerField()
+
+    class Meta:
+        verbose_name = 'Shopping Cart'
+        verbose_name_plural = 'Shopping Carts'
+    
+    def __str__(self):
+        return f"{self.profile} - {self.book}"
+        
