@@ -5,11 +5,14 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { 
   CATALOG, 
   DETAIL_BOOK, 
-  SHOPPING_CART } from "./constants/routes";
+  SHOPPING_CART,
+  PROFILE } from "./constants/routes";
 import Catalog from './pages/catalog/Catalog';
 import { loadUser } from "./actions/auth";
 import BookDetail from "./pages/bookDetail/BookDetail";
 import ShoppingCart from "./pages/shoppingCart/ShoppingCart";
+import Profile from "./pages/profile/Profile";
+
 
 class App extends Component {
   componentDidMount () {
@@ -26,6 +29,7 @@ class App extends Component {
             <Route path={`${DETAIL_BOOK}/:book/`} component={BookDetail} />
             <Redirect exact from={DETAIL_BOOK} to={`${CATALOG}/all/`} />
             <Route path={`${SHOPPING_CART}`} component={ShoppingCart} />
+            <Route path={`${PROFILE}`} component={Profile} />
           </Switch>
         </BrowserRouter>
       </Provider>

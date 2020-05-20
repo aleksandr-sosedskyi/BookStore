@@ -108,6 +108,14 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 240,
       },
     },
+    profileLink: {
+      textDecoration: "none",
+      color: "#333",
+      '&:hover': {
+        textDecoration: "none",
+        color: "#333"
+      }
+    }
   }));
 
 export default useStyles;

@@ -10,7 +10,7 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { CATALOG } from "../../constants/routes";
+import { CATALOG, PROFILE } from "../../constants/routes";
 import useStyles from "./styles";
 import { connect } from 'react-redux';
 import { logout } from "../../actions/auth";
@@ -63,7 +63,9 @@ const Navbar = (props) => {
       >
         {props.isAuthenticated ? (
           <div>
-            <MenuItem onClick={handleMenuClose}>Профиль</MenuItem>
+            <Link className={classes.profileLink} to={PROFILE}>
+              <MenuItem onClick={handleMenuClose}>Профиль</MenuItem>
+            </Link>
             <MenuItem onClick={handleLogout}>Выход</MenuItem>
           </div>
         ):
