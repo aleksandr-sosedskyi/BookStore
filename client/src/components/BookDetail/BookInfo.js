@@ -90,7 +90,7 @@ const BookInfo = (props) => {
         if (type === 'remove' && amount > 1){
             setAmount(amount-1);
         }
-        else if(type === 'add' && amount < book.in_stock){
+        else if(type === 'add'){
             setAmount(amount+1);
         }
     }

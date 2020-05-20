@@ -1,7 +1,8 @@
 import {
     GET_SHOPPING_CART,
     ADD_TO_SHOPPING_CART,
-    REMOVE_FROM_SHOPPING_CART
+    REMOVE_FROM_SHOPPING_CART,
+    CLEAR_SHOPPING_CART
 } from "./types";
 import axios from "axios";
 import { tokenConfig } from "./config";
@@ -49,4 +50,10 @@ export const removeFromShoppingCart = (id) => (dispatch, getState) => {
         .catch(error => {
             console.log(error);
         })
+}
+
+export const clearShopingCart = (id) => (dispatch) => {
+    dispatch({
+        type: CLEAR_SHOPPING_CART
+    })
 }

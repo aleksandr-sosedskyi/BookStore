@@ -21,7 +21,7 @@ class Order(models.Model):
         Profile,
         related_name='orders',
         on_delete=models.SET_NULL,
-        null = True
+        null=True
     )
     book = models.ManyToManyField(Book, related_name='order_book', through='orders.OrderBook')
     address = models.CharField(max_length=255)

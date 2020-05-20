@@ -39,6 +39,18 @@ const useStyles = makeStyles({
     cancelButton: {
         width: "100%",
         marginBottom: "1rem"
+    },
+    orderError: {
+        textAlign: "center",
+        color: "red",
+        fontSize: "0.7rem",
+        marginTop: "5px"
+    },
+    successIcon : {
+        fontSize: "3.4rem",
+        color: "green",
+        display: "block",
+        margin: "0 auto"
     }
 })
 
