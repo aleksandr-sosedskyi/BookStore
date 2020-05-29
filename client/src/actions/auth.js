@@ -87,3 +87,23 @@ export const register = (first_name, last_name, phone, email, password ) => (dis
             })
         })
 }
+
+export const changePassword = (
+    id, 
+    old_password, 
+    new_password,
+    handleSuccess,
+    handleError) => (dispatch, getState) => {
+
+    const body = JSON.stringify({old_password, new_password});
+
+    axios
+        .patch(`${API_URL}/accounts/change-password/${id}/`, body, tokenConfig(getState))
+        .then(response => {
+            handleSuccess();
+        })
+        .catch(error => {
+            handleError();
+            console.log(error);
+        })
+}

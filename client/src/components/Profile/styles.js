@@ -28,6 +28,11 @@ const useStyles = makeStyles({
         maxWidth: "350px",
         margin: "1rem auto"
     },
+    passwordChangeForm: {
+        width: "100%",
+        maxWidth: "350px",
+        margin: "1rem auto"
+    },
     saveSuccess: {
         marginTop: "1rem",
         color: "green",

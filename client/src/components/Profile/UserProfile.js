@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useStyles from "./styles";
 import ProfileInfo from './ProfileInfo';
 import ProfileOrders from './ProfileOrders';
+import ChangePassword from "./ChangePassword";
 import { connect } from "react-redux";
 import { editProfile } from "../../actions/profiles";
 
@@ -54,8 +55,10 @@ const UserProfile = (props) => {
                     />
 
                 ) : page == 'password' ? (
-                    <>
-                    </>
+                    <ChangePassword
+                    profile={profile}
+                    classes={classes}
+                    />
                 ) : (
                     <ProfileOrders
                     profile={profile}

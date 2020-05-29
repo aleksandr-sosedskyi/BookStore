@@ -6,6 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.generics import UpdateAPIView
 
 from accounts.permissions import IPBLackListPermission
 from accounts.serializers import (
@@ -63,6 +64,7 @@ class LoginView(generics.GenericAPIView):
             "profile": ProfileSerializer(profile).data
         })
 
+
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -70,3 +72,19 @@ class UserView(APIView):
         return Response({
             'profile': ProfileSerializer(request.user.profile).data
         })
+
+
+class ChangePassword(UpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        profile = self.get_object()
+        user = profile.user
+        data = request.data 
+        if user.check_password(data['old_password']):
+            user.set_password(data['new_password'])
+            user.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
