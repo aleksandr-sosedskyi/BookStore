@@ -27,6 +27,19 @@ const useStyles = makeStyles({
         width: "100%",
         maxWidth: "350px",
         margin: "1rem auto"
+    },
+    saveSuccess: {
+        marginTop: "1rem",
+        color: "green",
+        textAlign: "center",
+        fontSize: "0.95rem",
+        display: "none"
+    },
+    errorMessage: {
+        marginTop: "1rem",
+        color: "red",
+        textAlign: "center",
+        fontSize: "0.95rem",
     }
 })
 

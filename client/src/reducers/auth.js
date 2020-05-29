@@ -5,7 +5,8 @@ import {
     LOGIN_FAIL,
     LOGOUT_SUCCESS,
     REGISTER_SUCCESS,
-    REGISTER_FAIL
+    REGISTER_FAIL,
+    EDIT_PROFILE
 } from '../actions/types';
 
 const initialState = {
@@ -73,6 +74,11 @@ export default function(state=initialState, action) {
                 isLoading: false,
                 profile: null,
                 signInErrors: null
+            }
+        case EDIT_PROFILE:
+            return {
+                ...state,
+                profile: {'profile': action.payload}
             }
         default:
             return state;

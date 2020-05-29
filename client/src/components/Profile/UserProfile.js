@@ -3,6 +3,7 @@ import useStyles from "./styles";
 import { Button } from '@material-ui/core';
 import ProfileInfo from './ProfileInfo';
 import { connect } from "react-redux";
+import { editProfile } from "../../actions/profiles";
 
 
 const UserProfile = (props) => {
@@ -12,13 +13,17 @@ const UserProfile = (props) => {
     return (
         <>
             <div className={`row ${classes.profileHeader}`}>
-                <p className='col-4'><span>Редактировать профиль</span></p>
+                <p className='col-4' style={{opacity:0.5}}><span>Редактировать профиль</span></p>
                 <p className='col-4'><span>Сменить пароль</span></p>
                 <p className='col-4'><span>История заказов</span></p>
             </div>
             <div className={classes.main}>
                 {profile ? (
-                    <ProfileInfo profile={profile} classes={classes}/>
+                    <ProfileInfo 
+                    editProfile={props.editProfile} 
+                    profile={profile} 
+                    classes={classes}
+                    />
 
                 ) : (
                     <>
@@ -33,4 +38,4 @@ const mapStateToProps = (state) => ({
     profile: state.auth.profile
 })
 
-export default connect(mapStateToProps)(UserProfile);
+export default connect(mapStateToProps, {editProfile})(UserProfile);

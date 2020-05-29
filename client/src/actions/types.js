@@ -1,5 +1,4 @@
 export const GET_GENRES = 'GET_GENRES';
-export const GET_PROFILE = 'GET_PROFILE';
 export const USER_LOADING = 'USER_LOADING';
 export const USER_LOADED = 'USER_LOADED';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -19,3 +18,4 @@ export const CLEAR_SHOPPING_CART = 'CLEAR_SHOPPING_CART';
 export const GET_ORDERS = 'GET_ORDERS';
 export const CREATE_ORDER = 'CREATE_ORDER';
 export const DELETE_ORDER = 'DELETE_ORDER';
+export const EDIT_PROFILE = 'EDIT_PROFILE';

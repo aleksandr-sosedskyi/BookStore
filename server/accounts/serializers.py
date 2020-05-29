@@ -36,14 +36,22 @@ class ProfileSerializer(serializers.ModelSerializer):
         )
         return profile
 
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email')
+
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'email', 'phone')
+
     def update(self, instance, validated_data):
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.phone = validated_data.get('phone', instance.phone)
-        if 'user' in validated_data:
-            user = instance.user
-            user.email = validated_data.get('user')['email']
-            user.save()
+        instance.first_name = validated_data.get('first_name')
+        instance.last_name = validated_data.get('last_name')
+        instance.phone = validated_data.get('phone')
+        instance.save()
+        user = instance.user
+        user.email = validated_data.get('user')['email']
+        user.save()
         return instance
 
 

@@ -1,12 +1,18 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes, throttle_classes
+from rest_framework.decorators import permission_classes, throttle_classes
 from rest_framework.authtoken.models import Token
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework import status
+
 from accounts.permissions import IPBLackListPermission
-from accounts.serializers import ProfileSerializer, LoginSerializer
+from accounts.serializers import (
+    ProfileSerializer,
+    LoginSerializer, 
+    ProfileUpdateSerializer 
+)
 from accounts.models import Profile
 
 
@@ -30,6 +36,17 @@ class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticatedOrReadOnly,]
+
+    def update(self, request, *args, **kwargs):
+        profile = self.get_object()
+        serializer = ProfileUpdateSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            profile.refresh_from_db()
+            serializer = ProfileSerializer(profile)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
