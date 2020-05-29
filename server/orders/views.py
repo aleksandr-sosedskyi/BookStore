@@ -11,10 +11,20 @@ from orders import serializers
 
 class OrderViewSet(ModelViewSet):
     """ ViewSet for Orders """
-    queryset = models.Order.objects.all()
+    queryset = models.Order.objects.filter()
     serializer_class = serializers.OrderListSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        qs = models.Order.objects.filter(profile=self.request.user.profile).order_by('-created_at')
+        return qs
+
+    def destroy(self, request, *args, **kwargs):
+        obj = self.get_object()
+        order_id = obj.id 
+        obj.delete()
+        return Response({"id": order_id}, status=status.HTTP_200_OK)
+        
     def create(self, request, *args, **kwargs):
         """ Create order from Shopping Cart items """
         serializer = serializers.CreateOrderSerializer(data=request.data)

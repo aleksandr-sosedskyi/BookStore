@@ -40,7 +40,17 @@ const useStyles = makeStyles({
         color: "red",
         textAlign: "center",
         fontSize: "0.95rem",
-    }
+    },
+    orderBookCoverBlock: {
+        width: "93px"
+    },
+    orderBookCover: {
+        width: "100%",
+        height:"auto"
+    },
+    orderBookInfoText: {
+        fontSize: "1rem"
+    },
 })
 
 export default useStyles;

@@ -107,7 +107,6 @@ const ProfileInfo = (props) => {
                     >
                         Сохранить
                     </Button>
-                    {console.log(error)}
                     <p 
                     className={classes.errorMessage} 
                     style={error ? {} : {display: "none"}}>

@@ -35,10 +35,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
 class OrderListSerializer(serializers.ModelSerializer):
     """ Serializer for listing orders """
+    order_book = OrderBookSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.Order
-        fields = '__all__'
+        exclude = ['book']
         depth = 1
 
         
