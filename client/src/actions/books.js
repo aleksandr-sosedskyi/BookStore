@@ -1,4 +1,4 @@
-import { GET_BOOKS, GET_BOOK } from "./types";
+import { GET_BOOKS, GET_BOOK, GET_ALL_BOOKS } from "./types";
 import axios from "axios";
 import { API_URL } from '../constants/routes';
 
@@ -16,6 +16,20 @@ export const getBooks = (genreId) => dispatch => {
         })
         .catch(errors=> {
             console.log(errors);
+        })
+}
+
+export const getAllBooks = () => dispatch => {
+    axios
+        .get(`${API_URL}/books/search-books/`)
+        .then(response => {
+            dispatch({
+                type: GET_ALL_BOOKS,
+                payload: response.data
+            })
+        })
+        .catch(error => {
+            console.log('error');
         })
 }
 

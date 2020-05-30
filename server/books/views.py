@@ -3,6 +3,8 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
 
 from books import models
 from books import serializers
@@ -34,6 +36,13 @@ class BookViewSet(ModelViewSet):
         book = get_object_or_404(queryset, pk=pk)
         serializer = serializers.BookDetailSerializer(book)
         return Response(serializer.data)
+
+
+class BooksList(APIView):
+    def get(self, request, format=None):
+        qs = models.Book.objects.all()
+        serializer = serializers.BookListSerializer(qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CommentViewSet(ModelViewSet):

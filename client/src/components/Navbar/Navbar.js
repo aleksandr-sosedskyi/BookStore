@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,6 +18,9 @@ import LoginModal from "./LoginModal";
 import MenuIcon from '@material-ui/icons/Menu';
 import nureImage from '../../static/images/nure.png'
 import { SHOPPING_CART } from "../../constants/routes";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { getAllBooks } from "../../actions/books";
+import { DETAIL_BOOK, MEDIA_URL } from "../../constants/routes";
 
 const Navbar = (props) => {
   const classes = useStyles();
@@ -50,6 +53,10 @@ const Navbar = (props) => {
     props.logout();
   }
 
+  useEffect(() => {
+    props.getAllBooks();
+  }, [props.searchBooks.join(',')]);
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
       <Menu
@@ -78,7 +85,7 @@ const Navbar = (props) => {
         
       </Menu>
   );
-
+          console.log(props);
   return (
     <div className={classes.grow}>
       <AppBar style={{backgroundColor: '#1a1a1a'}} className={classes.appBar} position="fixed">
@@ -122,14 +129,39 @@ const Navbar = (props) => {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <div style={{width: "100%", maxWidth:"300px"}}>
+              <Autocomplete
+                freeSolo
+                id="search-input"
+                disableClearable
+                options={props.searchBooks}
+                getOptionLabel={(option) => option.title}
+                renderOption={(option) => (
+                  <Link 
+                  className={classes.searchBookLink} 
+                  to={`${DETAIL_BOOK}/${option.id}`}
+                  >
+                    <img 
+                    style={{width: 20, height:30}} 
+                    src={`${MEDIA_URL}${option.image}`} 
+                    className={classes.searchBookCover + ' mr-3'}
+                    />
+                    {option.title}
+                  </Link>
+                )}
+                renderInput={(params) => (
+                  <InputBase
+                  {...params}
+                  placeholder='Search...'
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput
+                  }}
+                  ref={params.InputProps.ref}
+                  />
+                )}
+              />
+            </div>
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -166,7 +198,8 @@ const Navbar = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  searchBooks: state.books.searchBooks
 });
 
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps, { logout, getAllBooks })(Navbar);

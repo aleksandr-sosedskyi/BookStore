@@ -10,6 +10,7 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const GET_BOOKS = 'GET_BOOKS';
 export const GET_BOOK = 'GET_BOOK';
+export const GET_ALL_BOOKS = 'GET_ALL_BOOKS';
 export const POST_COMMENT = 'POST_COMMENT';
 export const GET_SHOPPING_CART = 'GET_SHOPPING_CART';
 export const ADD_TO_SHOPPING_CART = 'ADD_TO_SHOPPING_CART';

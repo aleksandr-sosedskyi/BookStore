@@ -1,8 +1,9 @@
-import { GET_BOOKS, GET_BOOK } from "../actions/types";
+import { GET_BOOKS, GET_BOOK, GET_ALL_BOOKS } from "../actions/types";
 
 const initialState = {
     books: [],
-    pickedBook: {}
+    pickedBook: {},
+    searchBooks: []
 }
 
 
@@ -17,6 +18,11 @@ export default function(state=initialState, action) {
             return {
                 ...state,
                 pickedBook: action.payload
+            }
+        case GET_ALL_BOOKS:
+            return {
+                ...state,
+                searchBooks: action.payload
             }
         default:
             return state;

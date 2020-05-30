@@ -38,3 +38,10 @@ class BookDetailSerializer(serializers.ModelSerializer):
             'pages', 'description', 'genre', 'in_stock', 'comments'
             )
         depth = 2
+
+
+class BookListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Book
+        fields = ('id', 'title', 'image')
+        

@@ -115,6 +115,21 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: "none",
         color: "#333"
       }
+    },
+    searchBookLink: {
+      color: "#000",
+      textDecoration: "none",
+      display: "block",
+      width: "100%",
+      '&:hover': {
+        color: "#000",
+        textDecoration: "none"
+      }
+    },
+    searchBookCover: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'none !important',
+      },
     }
   }));
 
